@@ -13,6 +13,7 @@ describe('settingsReducer', () => {
     showNSFWPosts: false,
     upvoteSetting: true,
     rewardSetting: rewardsValues.half,
+    useBeta: false,
   };
 
   it('should return initial state', () => {
@@ -85,7 +86,10 @@ describe('settingsReducer', () => {
       },
     };
 
-    expect(settingsReducer(stateBefore, action)).to.eql(stateAfter);
+    const res = settingsReducer(stateBefore, action);
+    console.log(res);
+
+    expect(res).to.eql(stateAfter);
   });
 
   it('should set locale and voting power after login success', () => {

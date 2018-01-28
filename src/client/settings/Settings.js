@@ -11,6 +11,7 @@ import {
   getIsSettingsLoading,
   getVotePercent,
   getShowNSFWPosts,
+  getUseBeta,
 } from '../reducers';
 import { saveSettings } from './settingsActions';
 import { reload } from '../auth/authActions';
@@ -32,6 +33,7 @@ import './Settings.less';
     votingPower: getVotingPower(state),
     votePercent: getVotePercent(state),
     showNSFWPosts: getShowNSFWPosts(state),
+    useBeta: getUseBeta(state),
     loading: getIsSettingsLoading(state),
   }),
   { reload, saveSettings, notify },
@@ -45,6 +47,7 @@ export default class Settings extends React.Component {
     votePercent: PropTypes.number,
     loading: PropTypes.bool,
     showNSFWPosts: PropTypes.bool,
+    useBeta: PropTypes.bool,
     reload: PropTypes.func,
     saveSettings: PropTypes.func,
     notify: PropTypes.func,
@@ -57,6 +60,7 @@ export default class Settings extends React.Component {
     votePercent: 10000,
     loading: false,
     showNSFWPosts: false,
+    useBeta: false,
     reload: () => {},
     saveSettings: () => {},
     notify: () => {},
@@ -75,6 +79,7 @@ export default class Settings extends React.Component {
       votingPower: this.props.votingPower,
       votePercent: this.props.votePercent / 100,
       showNSFWPosts: this.props.showNSFWPosts,
+      useBeta: this.props.useBeta,
     });
   }
 
@@ -97,6 +102,10 @@ export default class Settings extends React.Component {
 
     if (nextProps.showNSFWPosts !== this.props.showNSFWPosts) {
       this.setState({ showNSFWPosts: nextProps.showNSFWPosts });
+    }
+
+    if (nextProps.useBeta !== this.props.useBeta) {
+      this.setState({ useBeta: nextProps.useBeta });
     }
   }
 
@@ -151,6 +160,7 @@ export default class Settings extends React.Component {
         votingPower: this.state.votingPower,
         votePercent: this.state.votePercent * 100,
         showNSFWPosts: this.state.showNSFWPosts,
+        useBeta: this.state.useBeta,
       })
       .then(() =>
         this.props.notify(
@@ -164,6 +174,7 @@ export default class Settings extends React.Component {
   handleVotingPowerChange = event => this.setState({ votingPower: event.target.value });
   handleVotePercentChange = value => this.setState({ votePercent: value });
   handleShowNSFWPosts = event => this.setState({ showNSFWPosts: event.target.checked });
+  handleUseBetaChange = event => this.setState({ useBeta: event.target.checked });
 
   render() {
     const {
@@ -174,7 +185,7 @@ export default class Settings extends React.Component {
       showNSFWPosts: initialShowNSFWPosts,
       loading,
     } = this.props;
-    const { votingPower, locale, showNSFWPosts } = this.state;
+    const { votingPower, locale, showNSFWPosts, useBeta } = this.state;
 
     const languageOptions = [];
 
@@ -282,7 +293,7 @@ export default class Settings extends React.Component {
                       defaultMessage="You can enable all posts tagged with NSFW to be shown as default."
                     />
                   </p>
-                  <div className="Settings__section__nsfw">
+                  <div className="Settings__section__checkbox">
                     <Checkbox
                       name="nsfw_posts"
                       defaultChecked={initialShowNSFWPosts}
@@ -293,6 +304,22 @@ export default class Settings extends React.Component {
                         id="display_nsfw_posts"
                         defaultMessage="Display NSFW Posts"
                       />
+                    </Checkbox>
+                  </div>
+                </div>
+                <div className="Settings__section">
+                  <h3>
+                    <FormattedMessage id="use_beta" defaultMessage="Use Busy beta" />
+                  </h3>
+                  <p>
+                    <FormattedMessage
+                      id="use_beta_details"
+                      defaultMessage="You can enable this option to use Busy beta by default."
+                    />
+                  </p>
+                  <div className="Settings__section__checkbox">
+                    <Checkbox name="use_beta" checked={useBeta} onChange={this.handleUseBetaChange}>
+                      <FormattedMessage id="use_beta" defaultMessage="Use Busy beta" />
                     </Checkbox>
                   </div>
                 </div>
